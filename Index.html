@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Góc Tự Rèn Luyện</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+    header { background: #4a90e2; color: white; padding: 20px; text-align: center; font-size: 26px; }
+    section { padding: 20px; }
+    .box { background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .title { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+    button { padding: 10px 20px; border: none; border-radius: 8px; background: #4a90e2; color: white; font-size: 16px; margin-top: 10px; }
+    button:hover { opacity: .9; cursor: pointer; }
+    .input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 10px; }
+</style>
+</head>
+
+<body>
+
+<header>GÓC TỰ RÈN LUYỆN – LỚP 1 • 2 • 3</header>
+
+<section>
+
+<!-- Giới thiệu -->
+<div class="box">
+    <div class="title">🎯 Mục tiêu chương trình</div>
+    <p>Hỗ trợ học sinh rèn luyện 10–15 phút mỗi ngày theo khả năng từng lớp.  
+    Phụ huynh theo dõi được quá trình, giáo viên giảm tải chấm điểm.</p>
+</div>
+
+<!-- Nút vào học -->
+<div class="box">
+    <div class="title">🚀 Bắt đầu rèn luyện</div>
+    <button onclick="document.getElementById('chonlop').style.display='block'">Chọn khối lớp</button>
+
+    <div id="chonlop" style="display:none; margin-top:15px;">
+        <button onclick="startLesson(1)">Lớp 1</button>
+        <button onclick="startLesson(2)">Lớp 2</button>
+        <button onclick="startLesson(3)">Lớp 3</button>
+    </div>
+</div>
+
+<!-- Form đăng ký -->
+<div class="box">
+    <div class="title">📝 Đăng ký tham gia</div>
+    <input id="tenHS" class="input" placeholder="Họ tên học sinh">
+    <input id="lopHS" class="input" placeholder="Lớp">
+    <button onclick="dangKy()">Xác nhận</button>
+</div>
+
+<!-- Hộp ủng hộ -->
+<div class="box">
+    <div class="title">💗 Ủng hộ chương trình (tự nguyện)</div>
+    <p>Nếu phụ huynh muốn ủng hộ, vui lòng quét mã dưới đây:</p>
+    <img id="qrImg" src="qr.png" style="width:160px;">
+    <p>(Cô thay hình QR bằng ảnh của cô)</p>
+</div>
+
+<!-- Báo cáo -->
+<div class="box">
+    <div class="title">📊 Xuất báo cáo</div>
+    <button onclick="exportCSV()">Tải báo cáo CSV</button>
+</div>
+
+</section>
+
+<script>
+// Lưu đăng ký
+function dangKy(){
+    let ten = document.getElementById("tenHS").value;
+    let lop = document.getElementById("lopHS").value;
+    if(!ten || !lop){ alert("Nhập đủ thông tin giúp em!"); return; }
+
+    let list = JSON.parse(localStorage.getItem("danhsach") || "[]");
+    list.push({ten: ten, lop: lop, time: new Date().toLocaleString()});
+    localStorage.setItem("danhsach", JSON.stringify(list));
+
+    alert("Đăng ký thành công!");
+}
+
+// Chọn lớp rèn luyện
+function startLesson(lop){
+    alert("Cô có thể thêm nội dung bài rèn luyện cho Lớp " + lop + " tại đây.");
+}
+
+// Xuất CSV
+function exportCSV(){
+    let list = JSON.parse(localStorage.getItem("danhsach") || "[]");
+    if(list.length === 0){ alert("Chưa có dữ liệu!"); return; }
+
+    let csv = "Họ tên,Lớp,Thời gian\n";
+    list.forEach(x=>{
+        csv += `${x.ten},${x.lop},${x.time}\n`;
+    });
+
+    let blob = new Blob([csv], { type: "text/csv" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "bao-cao-ren-luyen.csv";
+    link.click();
+}
+</script>
+
+</body>
+</html>
